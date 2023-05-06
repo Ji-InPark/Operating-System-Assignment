@@ -7,10 +7,14 @@ struct pcb{
 	char *pgtable;
 };
 
+// pcb 배열
 struct pcb* pcbs;
+// 프로세스 개수
 int processLength;
+// mcku.c에서 사용하는 변수 가져오기 위한 선언
 extern struct pcb *current = 0;
 
+// pid 1씩 올려서 current에 넣는 방식
 void ku_scheduler(char pid){
     current = &pcbs[++pid % processLength];
 }
