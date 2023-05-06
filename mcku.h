@@ -1,10 +1,14 @@
 #include <string.h>
+#include <stdbool.h>
+
 char* appendNewLine(char *str);
 
 struct pcb{
 	char pid;
 	FILE *fd;
 	char *pgtable;
+    // exit된 프로세스인지 판단
+    bool isExit = false;
 };
 
 // pcb 배열
@@ -16,21 +20,25 @@ extern struct pcb *current = 0;
 
 // pid 1씩 올려서 current에 넣는 방식
 void ku_scheduler(char pid){
-    current = &pcbs[++pid % processLength];
+    // 무한루프 막기위해서 count 변수 선언
+    int count = 0;
+
+    do {
+        current = &pcbs[++pid % processLength];
+    }while(current->isExit && count++ < processLength);
+
+    // 만약 모든 프로세스가 exit됐다면 current null
+    if(count == processLength)
+        current = NULL;
 }
 
 
 void ku_pgfault_handler(char pid){
-
-	/* Your code here */
-
 }
 
 
 void ku_proc_exit(char pid){
-
-	/* Your code here */
-
+    pcbs[pid].isExit = true;
 }
 
 
