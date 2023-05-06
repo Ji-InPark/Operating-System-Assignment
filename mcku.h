@@ -8,7 +8,7 @@ struct pcb{
 	FILE *fd;
 	char *pgtable;
     // exit된 프로세스인지 판단
-    bool isExit = false;
+    bool isExit;
 };
 
 // pcb 배열
@@ -34,6 +34,7 @@ void ku_scheduler(char pid){
 
 
 void ku_pgfault_handler(char pid){
+
 }
 
 
@@ -62,6 +63,7 @@ void ku_proc_init(int nprocs, char *flist){
         pcbs[i].fd = fopen(processFileName, "r");
         pcbs[i].pid = i;
         pcbs[i].pgtable = malloc(sizeof *pcbs->pgtable * 16);
+        pcbs[i].isExit = false;
     }
 }
 
