@@ -8,11 +8,11 @@ struct pcb{
 };
 
 struct pcb* pcbs;
+int processLength;
+extern struct pcb *current = 0;
 
 void ku_scheduler(char pid){
-
-	/* Your code here */
-
+    current = &pcbs[++pid % processLength];
 }
 
 
@@ -31,6 +31,8 @@ void ku_proc_exit(char pid){
 
 
 void ku_proc_init(int nprocs, char *flist){
+    // 프로세스 개수 기억
+    processLength = nprocs;
     // 프로세스 파일 리스트 들어있는 파일 불러오기
     FILE *fileList = fopen(flist, "r");
     // 프로세스 개수만큼 pcb 동적할당
