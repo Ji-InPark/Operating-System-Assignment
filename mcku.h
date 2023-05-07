@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-char* appendNewLine(char *str);
+char* deleteNewLine(char *str);
 
 struct pcb{
 	char pid;
@@ -58,8 +58,8 @@ void ku_proc_init(int nprocs, char *flist){
         // 프로세스 파일명 읽어오기
         char* processFileName = NULL;
         getline(&processFileName, &len, fileList);
-        // 마지막 줄은 개행문자가 없어서 추가해주는 과정
-        if(i == nprocs - 1) processFileName = appendNewLine(processFileName);
+        // 개행문자 지워주는 과정
+        processFileName = deleteNewLine(processFileName);
 
         pcbs[i].fd = fopen(processFileName, "r");
         pcbs[i].pid = i;
@@ -70,10 +70,12 @@ void ku_proc_init(int nprocs, char *flist){
     current = &pcbs[0];
 }
 
-char* appendNewLine(char *str) {
-    char *newstr = malloc(strlen(str) + 2);
-    strcpy(newstr, str);
-    strcat(newstr, "\n");
+char* deleteNewLine(char *str) {
+    if(str[strlen(str) - 1] != '\n') return str;
 
-    return newstr;
+    char *newStr = (char*)malloc(strlen(str) - 1);
+
+    for(int i = 0; i < strlen(str) - 1; i++) newStr[i] = str[i];
+
+    return newStr;
 }
