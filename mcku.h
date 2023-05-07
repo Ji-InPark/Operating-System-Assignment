@@ -17,6 +17,7 @@ struct pcb* pcbs;
 int processLength;
 // mcku.c에서 사용하는 변수 가져오기 위한 선언
 extern struct pcb *current;
+extern char *ptbr;
 
 // pid 1씩 올려서 current에 넣는 방식
 void ku_scheduler(char pid){
@@ -25,11 +26,14 @@ void ku_scheduler(char pid){
 
     do {
         current = &pcbs[++pid % processLength];
+        ptbr = current->pgtable;
     }while(current->isExit && count++ < processLength);
 
-    // 만약 모든 프로세스가 exit됐다면 current null
-    if(count == processLength)
-        current = NULL;
+    // 만약 모든 프로세스가 exit됐다면 프로그램 종료
+    if(count >= processLength){
+        printf("all process is exit\n");
+        exit(0);
+    }
 }
 
 
@@ -39,7 +43,7 @@ void ku_pgfault_handler(char pid){
 
 
 void ku_proc_exit(char pid){
-    printf("Called");
+    printf("proc exit called\n");
     pcbs[pid].isExit = true;
 }
 
@@ -67,9 +71,12 @@ void ku_proc_init(int nprocs, char *flist){
         pcbs[i].isExit = false;
     }
 
+    // current 초기화
     current = &pcbs[0];
+    ptbr = current->pgtable;
 }
 
+// 개행문자가 들어있으면 지우고 리턴 안들어있다면 그냥 리턴
 char* deleteNewLine(char *str) {
     if(str[strlen(str) - 1] != '\n') return str;
 
