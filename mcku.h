@@ -4,7 +4,7 @@
 char *deleteNewLine(char *str);
 
 struct pcb {
-    char pid;
+    unsigned char pid;
     FILE *fd;
     char *pgtable;
     // exit된 프로세스인지 판단
@@ -31,19 +31,18 @@ void ku_scheduler(char pid) {
 
     // 만약 모든 프로세스가 exit됐다면 프로그램 종료
     if (count >= processLength) {
-        printf("all process is exit\n");
         exit(0);
     }
 }
 
-
-void ku_pgfault_handler(char pid) {
-
+// 이게 맞나...?
+void ku_pgfault_handler(char va) {
+    int pt_index = (va & 0xF0) >> 4;
+    ptbr[pt_index] = 1;
 }
 
 
 void ku_proc_exit(char pid) {
-    printf("proc exit called\n");
     pcbs[pid].isExit = true;
 }
 
