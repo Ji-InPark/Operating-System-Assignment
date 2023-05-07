@@ -39,6 +39,7 @@ void ku_pgfault_handler(char pid){
 
 
 void ku_proc_exit(char pid){
+    printf("Called");
     pcbs[pid].isExit = true;
 }
 
@@ -65,6 +66,8 @@ void ku_proc_init(int nprocs, char *flist){
         pcbs[i].pgtable = malloc(sizeof *pcbs->pgtable * 16);
         pcbs[i].isExit = false;
     }
+
+    current = &pcbs[0];
 }
 
 char* appendNewLine(char *str) {
