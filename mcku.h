@@ -4,9 +4,9 @@
 char* deleteNewLine(char *str);
 
 struct pcb{
-	char pid;
-	FILE *fd;
-	char *pgtable;
+    char pid;
+    FILE *fd;
+    char *pgtable;
     // exit된 프로세스인지 판단
     bool isExit;
 };
